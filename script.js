@@ -49,7 +49,7 @@ $.ajax({
     
 //HEADING HTML ELEMENTS 
     let today = moment().format("dddd, MMM DD YYYY");
-    let heading = $(`<h1>`);
+    let heading = $(`<h2>`);
     heading.text( `${today} in London `);
     //VARIABLES TO ACCESS DATA IN OBJECT RETRIEVED
     let temp = response.main.temp;
@@ -65,16 +65,58 @@ $.ajax({
     let image = $('<img>')
     image.attr('src', imageSource)
     //html elements with objects data inside
-    let temperature = $('<h2>');
+    let temperature = $('<p>');
     temperature.addClass('.temperatureCurrent').text(`Temperature is ${temp}°C.`);
-    let windSpeed = $('<h2>');
+    let windSpeed = $('<p>');
     windSpeed.addClass('.speedOfWind').text(`Current speed of wind is ${wind}MPH.`);
-    let humidityPercent = $('<h2>');
+    let humidityPercent = $('<p>');
     humidityPercent.addClass('.humidityCurrent').text(`Humidity is currently ${humidity}%.`);
     heading.append(image)
     todayWeather.append(heading, temperature, windSpeed, humidityPercent )
 
 })
+}
+
+function weatherForecast(lat, lon){
+    let forecastURL = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat +'&lon=' + lon +'&appid=' + myApiKey;
+$.ajax({
+    url: forecastURL,
+    method:'get'
+}).then(function (response){
+    //in this forloop i am attempting to set index as well as 
+for (let i = 3; i < 40; i += 8 ){
+    //creating HTML elements
+    let iconID = response.list[i].weather[0].icon
+    let fcIconSource = 'http://openweathermap.org/img/wn/' + iconID + '@2x.png'
+    let fcIcon = $('<img>');
+    fcIcon.attr('src',fcIconSource);
+    let forecastBox = $('<article>')
+   
+    //accessing values form the object
+    let fcTemp = response.list[i].main.temp;
+    fcTemp -= 273.15;
+    fcTemp = fcTemp.toFixed(2);
+    let fcWind = response.list[i].wind.speed;
+    fcWind /= 1.609344;
+    fcWind = fcWind.toFixed(2);
+    let fcHumidity = response.list[i].main.humidity;
+
+    let forecastTemp = $('<p>');
+    forecastTemp.text(`Temp: ${fcTemp}°C`); 
+    let forecastWind = $('<p>');
+    forecastWind.text(`Wind: ${fcWind}MPH`);
+    let forecastHum = $('<p>');
+    forecastHum.text(`Humidity: ${fcHumidity}%.`)
+   
+    forecastBox.append(fcIcon, forecastTemp, forecastWind, forecastHum)
+    forecastRow.append(forecastBox)
+
+
+}
+})
+
+
+
 }
 
 
