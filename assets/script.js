@@ -25,7 +25,7 @@ searchHistory.forEach(createButton)
 searchBtn.on('click', function(event){
     event.preventDefault();
 let city = searchCity.val();
-let cityURL = 'http://api.openweathermap.org/geo/1.0/direct?q='+ city + '&limit=5&appid=' + myApiKey;//create valid url
+let cityURL = 'https://api.openweathermap.org/geo/1.0/direct?q='+ city + '&limit=5&appid=' + myApiKey;//create valid url
 $.ajax({
     url: cityURL,
     method: 'get'
@@ -60,7 +60,7 @@ oldBtns.on('click', 'button', function(event){
 
 //this function starts with finding latitude and longtitude of the searched city and then executes functions with them as parameters
 function displayOld(city){
-    let cityURL = 'http://api.openweathermap.org/geo/1.0/direct?q='+ city + '&limit=5&appid=' + myApiKey;
+    let cityURL = 'https://api.openweathermap.org/geo/1.0/direct?q='+ city + '&limit=5&appid=' + myApiKey;
 $.ajax({
     url: cityURL,
     method: 'get'
@@ -96,7 +96,7 @@ $.ajax({//calling api
     let humidity = response.main.humidity;
     //fetching icon picture
     let iconCode = response.weather[0].icon
-    let imageSource = 'http://openweathermap.org/img/wn/' + iconCode + '@2x.png'
+    let imageSource = 'https://openweathermap.org/img/wn/' + iconCode + '@2x.png'
     let image = $('<img>')
     image.attr('src', imageSource)
     //html elements with objects data inside
@@ -130,7 +130,7 @@ for (let i = 3; i < 40; i += 8 ){
     y +=1 //this will increase date (together with line bellow)
     forecastDay = moment().add(y, 'day').format('DD/MM/YYYY')
     let iconID = response.list[i].weather[0].icon
-    let fcIconSource = 'http://openweathermap.org/img/wn/' + iconID + '@2x.png' //creating url for icon based on in-object information
+    let fcIconSource = 'https://openweathermap.org/img/wn/' + iconID + '@2x.png' //creating url for icon based on in-object information
     let fcIcon = $('<img>');
     fcIcon.attr('src',fcIconSource);//adding the newly made url as src attribute in image
     let forecastBox = $('<article>')
