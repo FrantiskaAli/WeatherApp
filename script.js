@@ -6,33 +6,75 @@ const searchCity = $('#search-input');
 const forecastRow = $('#forecast');
 const searchBtn = $('#search-button');
 const oldBtns = $('#history');
+const clear = $('#search-clear');
+
+
+
+
 //
 
+clear.on('click', function(event){
+    event.preventDefault;
+    localStorage.clear()
 
 
+})
 
+
+//array oif buttons
+
+let searchHistory = JSON.parse(localStorage.getItem("history")) || [];
+console.log(searchHistory)
+
+searchHistory.forEach(createButton)
 
 //CREATING BUTTONS
 searchBtn.on('click', function(event){
     event.preventDefault();
 let city = searchCity.val();
-cityToGeo(city)
+let cityURL = 'http://api.openweathermap.org/geo/1.0/direct?q='+ city + '&limit=5&appid=' + myApiKey;
+$.ajax({
+    url: cityURL,
+    method: 'get'
+}).then(function(response) {
+if(response.length === 0){
+    alert('not valid input')
+    location.reload
+    return 
+}else{
+searchHistory.push(city)
+localStorage.setItem('history', JSON.stringify(searchHistory))
 let oldSearch = $('<button>')
-oldSearch.text(city).attr('id',city).addClass('.historyBtn')
+oldSearch.text(city).attr('id',city).attr('style','width: 80%;').addClass('historyBtn btn-dark py-2 my-1 rounded')
 oldBtns.append(oldSearch)
 searchCity.val('')
+
+let latitude = response[0].lat;
+let longtitude = response[0].lon;
+
+
+
+displayCurrentWeather(latitude, longtitude);//this function displays current weather
+weatherForecast(latitude, longtitude);//this function displays forecast
+}
+})
+
+
+
+
 })
 oldBtns.on('click', 'button', function(event){
     event.preventDefault();
  let city = $(this);
  cityToGeo(city.attr('id'));
- 
- 
+
+
+
+
  //cityToGeo(city)
     
     //cityToGeo(city)
 })
-
 
 
 
@@ -53,8 +95,12 @@ $.ajax({
     url: cityURL,
     method: 'get'
 }).then(function(response) {
+
+
 let latitude = response[0].lat;
 let longtitude = response[0].lon;
+
+
 
 displayCurrentWeather(latitude, longtitude);//this function displays current weather
 weatherForecast(latitude, longtitude);//this function displays forecast
@@ -71,11 +117,12 @@ $.ajax({
     url: currentWeatherURL,
     method: 'get'
 }).then(function(response){
-    console.log(response)
+    console.log(response) 
     todayWeather.empty()
 //HEADING HTML ELEMENTS 
     let today = moment().format("dddd, MMM DD YYYY");
     let heading = $(`<h2>`);
+    heading.addClass('display-4')
     let placeName = response.name
     heading.text( `${today} in ${placeName} `);
     //VARIABLES TO ACCESS DATA IN OBJECT RETRIEVED
@@ -93,13 +140,15 @@ $.ajax({
     image.attr('src', imageSource)
     //html elements with objects data inside
     let temperature = $('<p>');
-    temperature.addClass('.temperatureCurrent').text(`Temperature is ${temp}°C.`);
+    temperature.addClass('.lead').text(`Temperature is ${temp}°C.`);
     let windSpeed = $('<p>');
-    windSpeed.addClass('.speedOfWind').text(`Current speed of wind is ${wind}MPH.`);
+    windSpeed.addClass('.lead').text(`Current speed of wind is ${wind}MPH.`);
     let humidityPercent = $('<p>');
-    humidityPercent.addClass('.humidityCurrent').text(`Humidity is currently ${humidity}%.`);
+    humidityPercent.addClass('.lead').text(`Humidity is currently ${humidity}%.`);
+   
     heading.append(image)
     todayWeather.append(heading, temperature, windSpeed, humidityPercent )
+    todayWeather.addClass('border border-color-danger rounded bg-white')
 
 })
 }
@@ -114,9 +163,12 @@ $.ajax({
     let forecastDay = moment()//making sure i have 5 days forecast headings
     let y = 0 
     forecastRow.empty()
+    let headingMain = $('<h2>');
+    headingMain.text('Five days forecast : ').addClass('w-100 mb-2')
+    forecastRow.append(headingMain)
 for (let i = 3; i < 40; i += 8 ){
     //creating HTML elements
-    
+
     y +=1 //this will increase date (together with line bellow)
     forecastDay = moment().add(y, 'day').format('DD/MM/YYYY')
     let iconID = response.list[i].weather[0].icon
@@ -134,6 +186,8 @@ for (let i = 3; i < 40; i += 8 ){
     fcWind = fcWind.toFixed(2);
     let fcHumidity = response.list[i].main.humidity;
     
+  
+
     let fcheading = $('<h3>')
     fcheading.text(forecastDay)
     let forecastTemp = $('<p>');
@@ -143,15 +197,36 @@ for (let i = 3; i < 40; i += 8 ){
     let forecastHum = $('<p>');
     forecastHum.text(`Humidity: ${fcHumidity}%.`)
    
+    forecastBox.addClass('bg-info m-1 p-3 rounded text-dark border border-dark col-lg-2 col-sm-4 col-md-3 col-10')
     forecastBox.append(fcIcon, fcheading,  forecastTemp, forecastWind, forecastHum)
     forecastRow.append(forecastBox)
 
 
 }
+
 })
 
 
 
 }
 
+//function to create buttons
+function createButton(cityname){
+    let historySearch = $('<button>')
+historySearch.text(cityname).attr('id',cityname).attr('style','width: 80%;').addClass('historyBtn btn-dark py-2 my-1 rounded')
+oldBtns.append(historySearch)
+}
 
+//i created this function to ensure only cities that exists are searched and saved in as buttons
+function checkValidity(input){
+ let cityURL = 'http://api.openweathermap.org/geo/1.0/direct?q='+ input + '&limit=5&appid=' + myApiKey;
+ $.ajax({
+    url: cityURL,
+    method: 'get'
+}).then(function(response) {
+    console.log(response)
+    if(response.length === 0){
+        alert('not valid input')
+    }
+
+})}
