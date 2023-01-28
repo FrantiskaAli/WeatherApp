@@ -20,15 +20,15 @@
   <div class="container-fluid" style="max-width: 1400px">
     <div class="row">
       <aside class="col-lg-3 pb-3">
-        <h2 id="form-heading" class="mt-2 h3 form-label">
+        <h2 id="form-heading" class="mt-2 h3 form-label text-center m-3">
           Search for a City:
         </h2>
-        <form id="search-form" class="form">
+        <form id="search-form" class="form d-flex justify-content-center">
           <div class="form-inline form-group">
-            <div class="input-group">
+            <div class="input-group d-flex justify-content-center">
               <input class="form-input weather-search mb-2" type="text" id="search-input" placeholder="London"
                 aria-labelledby="form-heading" aria-controls="today forecast" />
-              <div class="input-group-append">
+              <div class="input-group-append d-flex justify-content-center">
                 <button type="submit" class="btn search-button btn-info rounded ml-2 " id="search-button" aria-label="submit search">
                   Search
                 </button>
@@ -40,7 +40,7 @@
             </div>
           </div>
         </form>
-        <div class="list-group" id="history"></div>
+        <div class="list-group d-flex align-items-center" id="history"></div>
       </aside>
 
       <div class="col-lg-9 pb-3">
