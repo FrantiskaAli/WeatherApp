@@ -97,8 +97,9 @@ $.ajax({//calling api
     //fetching icon picture
     let iconCode = response.weather[0].icon
     let imageSource = 'https://openweathermap.org/img/wn/' + iconCode + '@2x.png'
-    let image = $('<img>')
-    image.attr('src', imageSource).attr('alt', 'icon matching current weather')
+    let image = $('<img>');
+    image.attr('src', imageSource);
+    image.attr('alt', 'icon matching current weather');
     //html elements with objects data inside
     let temperature = $('<p>');
     temperature.addClass('.lead').text(`Temperature is ${temp}°C.`);
@@ -132,7 +133,8 @@ for (let i = 3; i < 40; i += 8 ){
     let iconID = response.list[i].weather[0].icon
     let fcIconSource = 'https://openweathermap.org/img/wn/' + iconID + '@2x.png' //creating url for icon based on in-object information
     let fcIcon = $('<img>');
-    fcIcon.attr('src',fcIconSource).attr('alt', 'icon matching weather forecast');//adding the newly made url as src attribute in image
+    fcIcon.attr('src',fcIconSource)//adding the newly made url as src attribute in image
+    fcIcon.attr('alt', 'icon matching weather forecast');
     let forecastBox = $('<article>')
     //accessing values form the object
     let fcTemp = response.list[i].main.temp;
