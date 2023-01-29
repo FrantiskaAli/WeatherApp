@@ -152,7 +152,7 @@ for (let i = 3; i < 40; i += 8 ){
     forecastWind.text(`Wind: ${fcWind}MPH`);
     let forecastHum = $('<p>');
     forecastHum.text(`Humidity: ${fcHumidity}%.`)
-    forecastBox.addClass('bg-info m-1 p-3 rounded text-dark border border-dark col-lg-2 col-sm-4 col-md-3 col-10')
+    forecastBox.addClass('bg-info m-1 p-1 rounded text-dark border border-dark col-lg-2 col-sm-4 col-md-4 col-10 align-items-center text-wrap')
     forecastBox.append(fcIcon, fcheading,  forecastTemp, forecastWind, forecastHum)
     forecastRow.append(forecastBox)
 }
